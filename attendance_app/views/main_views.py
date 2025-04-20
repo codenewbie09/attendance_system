@@ -59,14 +59,26 @@ def teacher_dashboard(request):
 @student_required
 def student_dashboard(request):
     student = request.user.student
-    attendance_records = Attendance.objects.filter(student=student).order_by('-session__date')
-    total_sessions = attendance_records.count()
-    present_sessions = attendance_records.filter(attendance_status='Present').count()
-    attendance_percentage = (present_sessions / total_sessions * 100) if total_sessions > 0 else 0
+    attendance_records = Attendance.objects.filter(
+        student=student
+    ).select_related('session__course').order_by('-timestamp')
+
+    # Calculate attendance percentage
+    total_sessions = ClassSession.objects.filter(
+        session_status__in=['Ongoing', 'Completed']
+    ).count()
+
+    if total_sessions > 0:
+        attended_sessions = attendance_records.filter(
+            attendance_status__in=['Present', 'Late']
+        ).count()
+        attendance_percentage = (attended_sessions / total_sessions) * 100
+    else:
+        attendance_percentage = 0
 
     return render(request, 'attendance_app/dashboard/student_dashboard.html', {
-        'attendance_records': attendance_records,
-        'attendance_percentage': attendance_percentage
+        'attendance_records': attendance_records[:10],  # Show only last 10 records
+        'attendance_percentage': attendance_percentage,
     })
 
 

@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
@@ -5,6 +7,7 @@ from django.utils import timezone
 from django.db.models import Count
 from ..models import ClassSession, Attendance, Student
 from ..decorators import admin_required, teacher_required, student_required
+from django.contrib import messages
 import csv
 
 
@@ -50,7 +53,7 @@ def mark_attendance(request, session_id):
 @teacher_required
 def attendance_report(request, session_id):
     session = get_object_or_404(ClassSession, pk=session_id)
-    records = Attendance.objects.filter(session=session)
+    records = Attendance.objects.filter(session=session).select_related('student')
 
     # Calculate counts here
     present_count = records.filter(attendance_status='Present').count()
@@ -138,3 +141,81 @@ def export_attendance_csv(request, session_id):
         ])
 
     return response
+
+
+@login_required
+@student_required
+def process_session_id(request):
+    if request.method == "POST":
+        session_id = request.POST.get('session_id')
+        qr_code = request.POST.get('qr_code')
+
+        # Validate inputs
+        if not session_id or not qr_code:
+            messages.error(request, "Both Session ID and QR Code are required.")
+            return redirect('student_dashboard')
+
+        try:
+            session = ClassSession.objects.get(id=session_id)
+        except ClassSession.DoesNotExist:
+            messages.error(request, "Session not found.")
+            return redirect('student_dashboard')
+
+        # Debug info - print both values for comparison
+        print("Entered QR code:", qr_code)
+        print("Session QR code:", session.dynamic_qr_code)
+
+        # Robust comparison - ignore case and whitespace
+        if session.dynamic_qr_code.strip().upper() != qr_code.strip().upper():
+            messages.error(request, "Invalid QR code for this session.")
+            return redirect('student_dashboard')
+
+        # Get current time
+        now = timezone.now()
+
+        # Parse time slot to get session end time
+        try:
+            start_str, end_str = session.time_slot.split('-')
+            end_time = timezone.datetime.strptime(end_str.strip(), "%H:%M").time()
+            session_end = timezone.datetime.combine(session.date, end_time)
+            session_end = timezone.make_aware(session_end)
+
+            # Late grace period (15 minutes after session end)
+            late_cutoff = session_end + timedelta(minutes=15)
+        except:
+            # If time parsing fails, just use QR validity
+            session_end = session.qr_validity_end
+            late_cutoff = session_end + timedelta(minutes=15)
+
+        # Check if already marked
+        already_marked = Attendance.objects.filter(
+            session=session,
+            student=request.user.student
+        ).exists()
+
+        if already_marked:
+            messages.warning(request, "You have already marked attendance for this session.")
+            return redirect('student_dashboard')
+
+        # Determine attendance status based on time
+        if session.qr_validity_start <= now <= session.qr_validity_end:
+            status = "Present"
+        elif session.qr_validity_end < now <= late_cutoff:
+            status = "Late"
+        else:
+            messages.error(request, "QR code is not valid at this time.")
+            return redirect('student_dashboard')
+
+        # Create attendance record
+        Attendance.objects.create(
+            student=request.user.student,
+            session=session,
+            course_id=session.course.id,
+            timestamp=now,
+            attendance_status=status,
+            qr_verification_status="Valid",
+            ip_address=request.META.get("REMOTE_ADDR")
+        )
+
+        messages.success(request, f"Attendance marked as {status} successfully!")
+    return redirect('student_dashboard')

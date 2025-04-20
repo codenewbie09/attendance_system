@@ -7,6 +7,16 @@
     <h1 class="h2">Student Dashboard</h1>
 </div>
 
+{% if messages %}
+<div class="row mb-4">
+    <div class="col-12">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 <div class="row mb-4">
     <div class="col-md-6">
         <div class="card">
@@ -16,7 +26,7 @@
             <div class="card-body">
                 <h2 class="card-title text-center">{{ attendance_percentage|floatformat:1 }}%</h2>
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" style="width: {{ attendance_percentage }}%" 
+                    <div class="progress-bar" role="progressbar" style="%width: {{ attendance_percentage }}%"
                         aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <p class="card-text mt-3">Your overall attendance across all courses.</p>
@@ -31,11 +41,17 @@
             </div>
             <div class="card-body">
                 <p class="card-text">Scan a QR code to mark your attendance for a session.</p>
-                <form action="#" method="get">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Enter Session ID" name="session_id">
-                        <button class="btn btn-outline-success" type="submit">Go</button>
+                <form action="{% url 'process_session_id' %}" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="session_id">Session ID</label>
+                        <input type="text" class="form-control" id="session_id" name="session_id" placeholder="Enter Session ID" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="qr_code">QR Code</label>
+                        <input type="text" class="form-control" id="qr_code" name="qr_code" placeholder="Enter QR Code" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Mark Attendance</button>
                 </form>
             </div>
         </div>
@@ -68,6 +84,10 @@
                     {% endif %}
                 </td>
                 <td>{{ record.timestamp }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No attendance records found.</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -27,4 +27,5 @@ urlpatterns = [
          name='admin_attendance_report_detail'),
     path('student-attendance-summary/', attendance_views.student_attendance_summary, name='student_attendance_summary'),
     path('export-attendance/<int:session_id>/', attendance_views.export_attendance_csv, name='export_attendance'),
+    path('process-session-id/', attendance_views.process_session_id, name='process_session_id'),
 ]
