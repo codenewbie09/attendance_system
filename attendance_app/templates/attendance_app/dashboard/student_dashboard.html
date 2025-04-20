@@ -1,0 +1,76 @@
+{% extends 'attendance_app/base.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Student Dashboard</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Attendance Overview</h5>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title text-center">{{ attendance_percentage|floatformat:1 }}%</h2>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ attendance_percentage }}%" 
+                        aria-valuenow="{{ attendance_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="card-text mt-3">Your overall attendance across all courses.</p>
+                <a href="{% url 'student_attendance_summary' %}" class="btn btn-primary">View Detailed Summary</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Scan a QR code to mark your attendance for a session.</p>
+                <form action="#" method="get">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter Session ID" name="session_id">
+                        <button class="btn btn-outline-success" type="submit">Go</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Recent Attendance Records</h2>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_records %}
+            <tr>
+                <td>{{ record.session.course.name }}</td>
+                <td>{{ record.session.date }}</td>
+                <td>
+                    {% if record.attendance_status == 'Present' %}
+                    <span class="badge bg-success">Present</span>
+                    {% elif record.attendance_status == 'Absent' %}
+                    <span class="badge bg-danger">Absent</span>
+                    {% else %}
+                    <span class="badge bg-warning">Late</span>
+                    {% endif %}
+                </td>
+                <td>{{ record.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

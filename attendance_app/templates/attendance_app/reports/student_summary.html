@@ -1,0 +1,43 @@
+{% extends 'attendance_app/base.html' %}
+
+{% block title %}Attendance Summary{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Your Attendance Summary</h1>
+</div>
+
+<div class="row">
+    {% for course_data in course_attendance %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header {% if course_data.percentage >= 75 %}bg-success{% elif course_data.percentage >= 60 %}bg-warning{% else %}bg-danger{% endif %} text-white">
+                <h5 class="mb-0">{{ course_data.course.name }}</h5>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title text-center">{{ course_data.percentage|floatformat:1 }}%</h2>
+                <div class="progress mb-3">
+                    <div class="progress-bar {% if course_data.percentage >= 75 %}bg-success{% elif course_data.percentage >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                         role="progressbar" style="%width: {{ course_data.percentage }}%"
+                         aria-valuenow="{{ course_data.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="card-text">
+                    Present: {{ course_data.present }} / {{ course_data.total }} classes
+                </p>
+                <p class="card-text">
+                    {% if course_data.percentage < 75 %}
+                    <span class="text-danger">Warning: Your attendance is below 75%</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            No attendance records found. Start attending sessions to see your summary.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

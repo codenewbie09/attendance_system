@@ -1,0 +1,81 @@
+{% extends 'attendance_app/base.html' %}
+
+{% block title %}Attendance Report{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Attendance Report: Session #{{ session.id }}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <a href="{% url 'export_attendance' session.id %}" class="btn btn-sm btn-outline-secondary">Export CSV</a>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <h4>Course: {{ session.course.name }}</h4>
+    <p>Date: {{ session.date }} | Time: {{ session.time_slot }}</p>
+    <p>Room: {{ session.room_number }}</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-bg-success mb-3">
+            <div class="card-header">Present</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ records.filter(attendance_status='Present').count }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-header">Absent</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ records.filter(attendance_status='Absent').count }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-header">Late</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ records.filter(attendance_status='Late').count }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Attendance List</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Status</th>
+                <th>Time</th>
+                <th>IP Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.student.roll_no }}</td>
+                <td>{{ record.student.name }}</td>
+                <td>
+                    {% if record.attendance_status == 'Present' %}
+                    <span class="badge bg-success">Present</span>
+                    {% elif record.attendance_status == 'Absent' %}
+                    <span class="badge bg-danger">Absent</span>
+                    {% else %}
+                    <span class="badge bg-warning">Late</span>
+                    {% endif %}
+                </td>
+                <td>{{ record.timestamp }}</td>
+                <td>{{ record.ip_address }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

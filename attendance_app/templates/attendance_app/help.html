@@ -1,0 +1,133 @@
+{% extends 'attendance_app/base.html' %}
+
+{% block title %}Help & Documentation{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="pb-2 border-bottom">Help & Documentation</h1>
+    
+    <div class="row g-5 py-5">
+        <div class="col-md-12">
+            <h2>Smart Attendance System User Guide</h2>
+            <p class="fs-5">This guide will help you understand how to use our QR-based attendance system effectively.</p>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="h5 mb-0">For Students</h3>
+                </div>
+                <div class="card-body">
+                    <h4>How to Mark Attendance</h4>
+                    <ol>
+                        <li>Log in to your student account.</li>
+                        <li>Ask your teacher for the session ID or QR code.</li>
+                        <li>Go to the "Mark Attendance" page for that session.</li>
+                        <li>Scan the QR code displayed by your teacher or enter the code manually.</li>
+                        <li>Submit the form to mark your attendance.</li>
+                    </ol>
+                    
+                    <h4>View Your Attendance</h4>
+                    <ol>
+                        <li>Go to your dashboard to see your overall attendance.</li>
+                        <li>Click on "Attendance Summary" for detailed course-wise information.</li>
+                        <li>Monitor your attendance percentage to ensure it stays above 75%.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h3 class="h5 mb-0">For Teachers</h3>
+                </div>
+                <div class="card-body">
+                    <h4>Create a New Session</h4>
+                    <ol>
+                        <li>Log in to your teacher account.</li>
+                        <li>Click on "Create Session" in the dashboard.</li>
+                        <li>Fill in the course, date, time, and room details.</li>
+                        <li>Submit to create a new session with a unique QR code.</li>
+                    </ol>
+                    
+                    <h4>Display QR Code for Students</h4>
+                    <ol>
+                        <li>From your dashboard, find the session you want to take attendance for.</li>
+                        <li>Click "Generate QR" to display the QR code.</li>
+                        <li>Show this code to students or project it in the classroom.</li>
+                        <li>The code will expire after 15 minutes for security.</li>
+                    </ol>
+                    
+                    <h4>View & Export Attendance Reports</h4>
+                    <ol>
+                        <li>Click "View Report" for any session to see who attended.</li>
+                        <li>Use the "Export CSV" button to download the data for your records.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h3 class="h5 mb-0">For Administrators</h3>
+                </div>
+                <div class="card-body">
+                    <h4>System Management</h4>
+                    <ol>
+                        <li>Access the admin dashboard to view system-wide statistics.</li>
+                        <li>Review attendance reports for all sessions.</li>
+                        <li>Access detailed reports to monitor attendance patterns.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-12 mt-5">
+            <h3>Frequently Asked Questions</h3>
+            
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqAnswer1">
+                            What if I can't scan the QR code?
+                        </button>
+                    </h2>
+                    <div id="faqAnswer1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            If you're having trouble scanning the QR code, you can manually enter the code data. Ask your teacher for the code text.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqAnswer2">
+                            The QR code isn't working. What should I do?
+                        </button>
+                    </h2>
+                    <div id="faqAnswer2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            QR codes expire after 15 minutes for security reasons. Ask your teacher to refresh the code if it has expired.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqAnswer3">
+                            How is my attendance percentage calculated?
+                        </button>
+                    </h2>
+                    <div id="faqAnswer3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Your attendance percentage is calculated as: (Number of sessions you were present ÷ Total number of sessions) × 100
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

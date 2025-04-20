@@ -1,0 +1,31 @@
+{% extends 'attendance_app/base.html' %}
+
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Mark Attendance for Session #{{ session.id }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5>Course: {{ session.course.name }}</h5>
+                    <p>Date: {{ session.date }} | Time: {{ session.time_slot }}</p>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="qr_code" class="form-label">Enter QR Code Data</label>
+                        <input type="text" name="qr_code" id="qr_code" class="form-control" required>
+                        <div class="form-text">Enter the data from the QR code or scan using your device.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Mark Attendance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

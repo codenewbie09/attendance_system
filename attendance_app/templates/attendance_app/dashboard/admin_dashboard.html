@@ -1,0 +1,68 @@
+{% extends 'attendance_app/base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Admin Dashboard</h1>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-header">Total Sessions</div>
+            <div class="card-body">
+                <h5 class="card-title">{{total_count}}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-success mb-3">
+            <div class="card-header">Active Sessions</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ ongoing_count }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-bg-info mb-3">
+            <div class="card-header">Completed Sessions</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ completed_count }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Recent Sessions</h2>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Course</th>
+                <th>Teacher</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session.id }}</td>
+                <td>{{ session.course.name }}</td>
+                <td>{{ session.teacher.name }}</td>
+                <td>{{ session.date }}</td>
+                <td>{{ session.time_slot }}</td>
+                <td>{{ session.session_status }}</td>
+                <td>
+                    <a href="{% url 'admin_attendance_report_detail' session.id %}" class="btn btn-sm btn-primary">View Report</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
