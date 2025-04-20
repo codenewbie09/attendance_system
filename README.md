@@ -103,3 +103,14 @@ Install the required Python libraries using the following commands:
 
 - **Attendance not showing:**  
   Ensure you are marking attendance with both Session ID and QR code, and that the session is ongoing and QR code is valid.
+
+## NOTE
+- To modify the session status of classes please run:
+```
+  python manage.py update_session_status
+ ```
+- To mark all students absent who did not mark their attendance on time
+  Use:
+```
+  python manage.py mark_absent
+  ```
