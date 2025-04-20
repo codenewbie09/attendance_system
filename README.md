@@ -9,7 +9,7 @@ A Django-based web application to automate and secure attendance tracking in edu
 This project is structured as a Django web application with the following modules:
 
 - **Models:**  
-  - Represents entities such as `Student`, `Teacher`, `Department`, `Course`, `User`, `ClassSession`, and `Attendance` ([see schema][1][3]).
+  - Represents entities such as `Student`, `Teacher`, `Department`, `Course`, `User`, `ClassSession`, and `Attendance`
   - Each model corresponds to a normalized table in the MySQL database (all in 3NF).
 
 - **Views:**  
