@@ -1,0 +1,35 @@
+{% extends "attendance_app/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Attendance Report for Session {{ session.id }}</h2>
+    <h4>Course: {{ session.course.name }}</h4>
+    <p>Date: {{ session.date }} | Time: {{ session.time_slot }}</p>
+    <p>Room: {{ session.room_number }}</p>
+
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Roll No</th>
+                <th>Status</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.student.name }}</td>
+                <td>{{ record.student.roll_no }}</td>
+                <td>{{ record.attendance_status }}</td>
+                <td>{{ record.timestamp }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No attendance records found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -45,17 +45,25 @@ def mark_attendance(request, session_id):
     return render(request, 'attendance_app/attendance/mark_attendance.html', {'session': session})
 
 
+# attendance_app/views/attendance_views.py
 @login_required
 @teacher_required
 def attendance_report(request, session_id):
     session = get_object_or_404(ClassSession, pk=session_id)
+    records = Attendance.objects.filter(session=session)
 
-    # Verify that the requesting teacher is the one who created the session
-    if session.teacher.user != request.user:
-        return HttpResponseForbidden("You don't have permission to view this report.")
+    # Calculate counts here
+    present_count = records.filter(attendance_status='Present').count()
+    absent_count = records.filter(attendance_status='Absent').count()
+    late_count = records.filter(attendance_status='Late').count()
 
-    records = Attendance.objects.filter(session=session).select_related('student')
-    return render(request, 'attendance_app/reports/attendance_report.html', {'session': session, 'records': records})
+    return render(request, 'attendance_app/reports/attendance_report.html', {
+        'session': session,
+        'records': records,
+        'present_count': present_count,
+        'absent_count': absent_count,
+        'late_count': late_count,
+    })
 
 
 @login_required

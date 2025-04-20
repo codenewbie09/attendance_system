@@ -23,7 +23,7 @@
         <div class="card text-bg-success mb-3">
             <div class="card-header">Present</div>
             <div class="card-body">
-                <h5 class="card-title">{{ records.filter(attendance_status='Present').count }}</h5>
+                <h5 class="card-title">{{ present_count }}</h5>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="card text-bg-danger mb-3">
             <div class="card-header">Absent</div>
             <div class="card-body">
-                <h5 class="card-title">{{ records.filter(attendance_status='Absent').count }}</h5>
+                <h5 class="card-title">{{ absent_count }}</h5>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
         <div class="card text-bg-warning mb-3">
             <div class="card-header">Late</div>
             <div class="card-body">
-                <h5 class="card-title">{{ records.filter(attendance_status='Late').count }}</h5>
+                <h5 class="card-title">{{ late_count }}</h5>
             </div>
         </div>
     </div>

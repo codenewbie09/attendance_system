@@ -1,0 +1,31 @@
+{% extends "attendance_app/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Create New Session</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="course" class="form-label">Course</label>
+            <select name="course" id="course" class="form-select" required>
+                {% for course in courses %}
+                    <option value="{{ course.id }}">{{ course.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" name="date" id="date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="time_slot" class="form-label">Time Slot</label>
+            <input type="text" name="time_slot" id="time_slot" class="form-control" placeholder="e.g. 10:00-11:00" required>
+        </div>
+        <div class="mb-3">
+            <label for="room_number" class="form-label">Room Number</label>
+            <input type="text" name="room_number" id="room_number" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Session</button>
+    </form>
+</div>
+{% endblock %}

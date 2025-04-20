@@ -1,0 +1,38 @@
+{% extends "attendance_app/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>All Sessions</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Session ID</th>
+                <th>Course</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session.id }}</td>
+                <td>{{ session.course.name }}</td>
+                <td>{{ session.date }}</td>
+                <td>{{ session.time_slot }}</td>
+                <td>
+                    <a href="{% url 'admin_attendance_report_detail' session.id %}" 
+                       class="btn btn-sm btn-primary">
+                        View Report
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No sessions found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
