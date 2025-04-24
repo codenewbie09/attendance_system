@@ -210,7 +210,6 @@ def process_session_id(request):
         Attendance.objects.create(
             student=request.user.student,
             session=session,
-            course_id=session.course.id,
             timestamp=now,
             attendance_status=status,
             qr_verification_status="Valid",

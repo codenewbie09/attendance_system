@@ -45,3 +45,4 @@ admin.site.register(Teacher, TeacherAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(ClassSession, ClassSessionAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
+admin.site.site_header = "Database Panel"
